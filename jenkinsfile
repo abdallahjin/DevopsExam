@@ -10,8 +10,20 @@ node {
         sh "ls -l"	
        
     }
-
-      stage('Apply changes to the environment') {
+	
+    stage('Build Image'){
+	/*This builds the image*/
+	app=docker.build("DevopsExam/index.html")
+	
+	}
+    stage("Push Image")
+	{
+	docker.withRegistry('https://registry.hub.docker.com','docker-hub-credentials'){
+	app.push("${env.BUILD_NUMBER}")
+	app.push("latest")
+	}
+	}
+    stage('Apply changes to the environment') {
 
         sh "ls -l"	
         sh "echo run application"
